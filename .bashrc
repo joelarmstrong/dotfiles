@@ -2,6 +2,8 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+TERM="screen-256color"
+
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
@@ -123,15 +125,45 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-if [ "$color_prompt" = yes ]; then
-PS1="\[\e[40m\]\[\e[1;37m\] \u \[\e[47m\]\[\e[1;30m\] \w \[\e[0m\]\[\e[1;37m\]\[\e[42m\] > \[\e[0m\]"
-#    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-PS1="\[\e[40m\]\[\e[1;37m\] \u \[\e[47m\]\[\e[1;30m\] \w \[\e[0m\]\[\e[1;37m\]\[\e[42m\] > \[\e[0m\]"
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
 unset color_prompt force_color_prompt
-PS1='\[\e[40m\]\[\e[1;37m\] \u \[\e[47m\]\[\e[1;30m\] $(shorten_path "\w" 50) \[\e[0m\]\[\e[1;37m\]\[\e[42m\] > \[\e[0m\]'
+
+# Show username in prompt?
+case $USER in
+    joel|jcarmstr)
+        # Normal username -- don't bother showing it
+        PS1='\[\e[40m\]\[\e[1;37m\]'
+        ;;
+    root)
+        PS1='\[\e[41m\]\[\e[1;37m\] \u'
+        ;;
+    *)
+        # Other username
+        PS1='\[\e[40m\]\[\e[1;37m\] \u'
+        ;;
+esac
+# Show hostname in prompt?
+if [ -n "$SSH_CLIENT" ] || [ "$(who am i | cut -f2  -d\( | cut -f1 -d:)" != "" ]; then
+    # SSH session -- show hostname
+    lastchar="${PS1:0:1}"
+    if [[ "$PS1" =~ ]$ ]]; then
+        PS1+=' '
+    else
+        PS1+='@'
+    fi
+    PS1+='\h '
+else
+    # Normal session on local host
+    if [[ ! "$PS1" =~ ]$ ]]; then
+        PS1+=' '
+    fi
+    PS1+=''
+fi
+# Rest of prompt
+if [ "$USER" = "root" ]; then
+    PS1+='\[\e[47m\]\[\e[1;30m\] $(shorten_path "\w" 50) \[\e[0m\]\[\e[1;37m\]\[\e[41m\] > \[\e[0m\]'
+else
+    PS1+='\[\e[47m\]\[\e[1;30m\] $(shorten_path "\w" 50) \[\e[0m\]\[\e[1;37m\]\[\e[42m\] > \[\e[0m\]'
+fi
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
@@ -177,3 +209,8 @@ fi
 export ALTERNATE_EDITOR=""
 export EDITOR="emacsclient -c"
 alias emacs=$EDITOR
+alias tmux="tmux -2"
+
+if [ -f ~/.bashrc.local ]; then
+    . ~/.bashrc.local
+fi
