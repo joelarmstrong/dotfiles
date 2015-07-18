@@ -6,8 +6,13 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/"))
 (package-initialize)
-(setq packages-used '(magit company-anaconda company smex color-theme undo-tree expand-region ess))
-(package-refresh-contents)
+(setq packages-used '(magit company-anaconda company smex color-theme undo-tree expand-region ess haskell-mode))
+(defun all-packages-installed (packages)
+  (cond ((not packages) t)
+        ((package-installed-p (car packages)) (all-packages-installed (cdr packages)))
+        (t nil)))
+(unless (all-packages-installed packages-used)
+  (package-refresh-contents))
 (dolist (package packages-used)
   (unless (package-installed-p package)
     (package-install package)))
@@ -22,7 +27,7 @@
 ;; bind expand-region
 (global-set-key "\M-o" 'er/expand-region)
 
-;; what would possess someone to do this
+;; ESS makes _ insert ->. what would possess someone to do this
 (ess-toggle-underscore nil)
 
 ;; keybindings
@@ -133,6 +138,8 @@
 ;; stop ido from giving up on listing files in moderately large
 ;; directories
 (setq ido-max-directory-size 200000)
+;; stop ido from hijacking the minibuffer and searching for a file
+;; while you are in C-x C-f. who thought this was a good idea?
 (setq ido-auto-merge-work-directories-length -1)
 
 (show-paren-mode t)
@@ -190,9 +197,8 @@ Symbols matching the text at point are put first in the completion list."
 (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
 (add-hook 'haskell-mode-hook 'haskell-doc-mode)
 
-;; are you fucking serious, python-mode?
-(add-hook 'python-mode-hook
-          (lambda () (electric-indent-mode -1)))
+;; stop autoindenting on newlines.
+(electric-indent-mode -1)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -205,6 +211,7 @@ Symbols matching the text at point are put first in the completion list."
  '(ido-mode (quote both) nil (ido))
  '(inhibit-startup-screen t)
  '(magit-process-connection-type t))
+
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
