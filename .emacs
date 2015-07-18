@@ -1,9 +1,4 @@
 (add-to-list 'load-path "~/.emacs.d/site-lisp/")
-(add-to-list 'load-path "~/.emacs.d/site-lisp/org-mode/lisp/")
-(add-to-list 'load-path "~/.emacs.d/site-lisp/org-mode/contrib/lisp/")
-(add-to-list 'load-path "~/.emacs.d/site-lisp/ess-13.09-1/lisp/")
-(add-to-list 'load-path "~/.emacs.d/site-lisp/magit/")
-(add-to-list 'load-path "~/.emacs.d/site-lisp/dash.el/")
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 
@@ -11,7 +6,7 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/"))
 (package-initialize)
-(setq packages-used '(magit company-anaconda company smex color-theme undo-tree expand-region))
+(setq packages-used '(magit company-anaconda company smex color-theme undo-tree expand-region ess))
 (package-refresh-contents)
 (dolist (package packages-used)
   (unless (package-installed-p package)
@@ -34,8 +29,6 @@
 (global-set-key "\M-g" 'goto-line)
 (global-set-key "\C-c\C-r" 'revert-buffer)
 (global-set-key "\C-x\C-a" 'magit-status)
-(global-set-key "\C-c\C-p" 'previous-logical-line)
-(global-set-key "\C-c\C-n" 'next-logical-line)
 (require 'ergo-movement-mode)
 (ergo-movement-mode 1)
 
@@ -44,6 +37,8 @@
               c-basic-offset 4
               indent-tabs-mode nil)
 ;; display
+
+(set-default-font "Droid Sans Mono-10")
 
 ;; backup dir
 (setq
@@ -135,6 +130,8 @@
 
 (global-undo-tree-mode)
 
+;; stop ido from giving up on listing files in moderately large
+;; directories
 (setq ido-max-directory-size 200000)
 (setq ido-auto-merge-work-directories-length -1)
 
@@ -190,6 +187,13 @@ Symbols matching the text at point are put first in the completion list."
                 (font-lock-add-keywords nil
                  '(("\\<\\(FIXME\\|TODO\\|BUG\\|HACK\\):" 1 font-lock-warning-face t)))))
 
+(add-hook 'haskell-mode-hook 'haskell-indentation-mode)
+(add-hook 'haskell-mode-hook 'haskell-doc-mode)
+
+;; are you fucking serious, python-mode?
+(add-hook 'python-mode-hook
+          (lambda () (electric-indent-mode -1)))
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -207,3 +211,5 @@ Symbols matching the text at point are put first in the completion list."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((t (:inherit nil :stipple nil :background "Grey15" :foreground "Grey" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 113 :width normal :foundry "unknown" :family "Source Code Pro")))))
+
+(put 'downcase-region 'disabled nil)
