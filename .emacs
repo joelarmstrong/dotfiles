@@ -6,7 +6,7 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/"))
 (package-initialize)
-(setq packages-used '(magit company-anaconda company smex color-theme undo-tree expand-region ess haskell-mode markdown-mode))
+(setq packages-used '(magit company-anaconda company smex color-theme undo-tree expand-region ess haskell-mode markdown-mode toc-org))
 (defun all-packages-installed (packages)
   (cond ((not packages) t)
         ((package-installed-p (car packages)) (all-packages-installed (cdr packages)))
@@ -91,6 +91,9 @@
   (let (org-log-done org-log-states)   ; turn off logging
     (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
 (add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+(if (require 'toc-org nil t)
+    (add-hook 'org-mode-hook 'toc-org-enable)
+  (warn "toc-org not found"))
 
 ;; Screen is such garbage
 (global-set-key "\e[1;2A" [S-up])
