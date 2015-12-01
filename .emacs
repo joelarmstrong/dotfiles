@@ -6,7 +6,7 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/"))
 (package-initialize)
-(setq packages-used '(magit company-anaconda company smex color-theme undo-tree expand-region ess haskell-mode))
+(setq packages-used '(magit company-anaconda company smex color-theme undo-tree expand-region ess haskell-mode rust-mode))
 (defun all-packages-installed (packages)
   (cond ((not packages) t)
         ((package-installed-p (car packages)) (all-packages-installed (cdr packages)))
