@@ -6,7 +6,7 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/"))
 (package-initialize)
-(setq packages-used '(magit company-anaconda company smex color-theme undo-tree expand-region ess haskell-mode markdown-mode toc-org))
+(setq packages-used '(magit company-anaconda company smex color-theme undo-tree expand-region ess haskell-mode markdown-mode toc-org js2-mode))
 (defun all-packages-installed (packages)
   (cond ((not packages) t)
         ((package-installed-p (car packages)) (all-packages-installed (cdr packages)))
@@ -23,6 +23,8 @@
 (require 'smex)
 (require 'undo-tree)
 (require 'ess-site)
+
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
 ;; bind expand-region
 (global-set-key "\M-o" 'er/expand-region)
@@ -43,6 +45,7 @@
 (setq-default c-default-style "linux"
               c-basic-offset 4
               indent-tabs-mode nil)
+(setq js-indent-level 4)
 
 ;; backup dir
 (setq
@@ -129,16 +132,6 @@
 (add-to-list 'company-backends 'company-anaconda)
 (add-hook 'python-mode-hook 'anaconda-mode)
 
-;; ;; Use ido with M-x
-;; (global-set-key
-;;  "\M-x"
-;;  (lambda ()
-;;    (interactive)
-;;    (call-interactively
-;;     (intern
-;;      (ido-completing-read
-;;       "M-x "
-;;       (all-completions "" obarray 'commandp))))))
 (smex-initialize)
 (global-set-key "\M-x" 'smex)
 (global-set-key "\M-X" 'smex-major-mode-commands)
