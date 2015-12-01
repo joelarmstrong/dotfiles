@@ -6,7 +6,7 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/"))
 (package-initialize)
-(setq packages-used '(magit company-anaconda company smex color-theme undo-tree expand-region ess haskell-mode rust-mode))
+(setq packages-used '(magit company-anaconda company smex color-theme undo-tree expand-region ess haskell-mode rust-mode markdown-mode toc-org js2-mode))
 (defun all-packages-installed (packages)
   (cond ((not packages) t)
         ((package-installed-p (car packages)) (all-packages-installed (cdr packages)))
@@ -24,6 +24,8 @@
 (require 'undo-tree)
 (require 'ess-site)
 
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
 ;; bind expand-region
 (global-set-key "\M-o" 'er/expand-region)
 
@@ -34,6 +36,8 @@
 (global-set-key "\M-g" 'goto-line)
 (global-set-key "\C-c\C-r" 'revert-buffer)
 (global-set-key "\C-x\C-a" 'magit-status)
+(global-set-key "\C-c\C-p" 'previous-logical-line)
+(global-set-key "\C-c\C-n" 'next-logical-line)
 (require 'ergo-movement-mode)
 (ergo-movement-mode 1)
 
@@ -41,9 +45,7 @@
 (setq-default c-default-style "linux"
               c-basic-offset 4
               indent-tabs-mode nil)
-;; display
-
-(set-default-font "Droid Sans Mono-10")
+(setq js-indent-level 4)
 
 ;; backup dir
 (setq
@@ -81,6 +83,20 @@
 (setq org-refile-use-outline-path t)
 (setq org-outline-path-complete-in-steps nil)
 (setq org-refile-allow-creating-parent-nodes (quote confirm))
+(setq org-hierarchical-todo-statistics nil)
+(setq org-todo-keywords '((sequence "TODO" "WAITING" "|" "DONE" "CANCELLED")))
+(setq org-todo-keyword-faces '(("TODO" . org-todo)
+                               ("WAITING" . "LightGoldenrod2")
+                               ("CANCELLED" . "MediumOrchid3")
+                               ("DONE" . org-done)))
+(defun org-summary-todo (n-done n-not-done)
+  "Switch entry to DONE when all subentries are done, to TODO otherwise."
+  (let (org-log-done org-log-states)   ; turn off logging
+    (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+(add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+(if (require 'toc-org nil t)
+    (add-hook 'org-mode-hook 'toc-org-enable)
+  (warn "toc-org not found"))
 
 ;; Screen is such garbage
 (global-set-key "\e[1;2A" [S-up])
@@ -116,16 +132,6 @@
 (add-to-list 'company-backends 'company-anaconda)
 (add-hook 'python-mode-hook 'anaconda-mode)
 
-;; ;; Use ido with M-x
-;; (global-set-key
-;;  "\M-x"
-;;  (lambda ()
-;;    (interactive)
-;;    (call-interactively
-;;     (intern
-;;      (ido-completing-read
-;;       "M-x "
-;;       (all-completions "" obarray 'commandp))))))
 (smex-initialize)
 (global-set-key "\M-x" 'smex)
 (global-set-key "\M-X" 'smex-major-mode-commands)
@@ -199,6 +205,12 @@ Symbols matching the text at point are put first in the completion list."
 
 ;; stop autoindenting on newlines.
 (electric-indent-mode -1)
+
+(autoload 'markdown-mode "markdown-mode"
+  "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
