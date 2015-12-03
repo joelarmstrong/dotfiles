@@ -15,6 +15,7 @@
                       expand-region
                       ess
                       haskell-mode
+                      rust-mode
                       markdown-mode
                       toc-org
                       js2-mode
