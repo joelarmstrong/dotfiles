@@ -6,7 +6,19 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/"))
 (package-initialize)
-(setq packages-used '(magit company-anaconda company smex color-theme undo-tree expand-region ess haskell-mode markdown-mode toc-org js2-mode))
+(setq packages-used '(magit
+                      company
+                      company-anaconda
+                      smex
+                      color-theme
+                      undo-tree
+                      expand-region
+                      ess
+                      haskell-mode
+                      markdown-mode
+                      toc-org
+                      js2-mode
+                      web-mode))
 (defun all-packages-installed (packages)
   (cond ((not packages) t)
         ((package-installed-p (car packages)) (all-packages-installed (cdr packages)))
@@ -25,6 +37,7 @@
 (require 'ess-site)
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
 ;; bind expand-region
 (global-set-key "\M-o" 'er/expand-region)
