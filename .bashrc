@@ -206,10 +206,13 @@ if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
 fi
 
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+
 export ALTERNATE_EDITOR=""
 export EDITOR="emacsclient -c"
 alias emacs=$EDITOR
 alias tmux="tmux -2"
+alias kolossus="autossh -t kolossus 'source .bashrc && TMPDIR=/scratch/tmp tmux a'"
 
 if [ -f ~/.bashrc.local ]; then
     . ~/.bashrc.local
