@@ -157,9 +157,9 @@ else
 fi
 # Rest of prompt
 if [ "$USER" = "root" ]; then
-    PS1+='\[\e[47m\]\[\e[1;30m\] $(shorten_path "\w" 50) \[\e[0m\]\[\e[1;37m\]\[\e[41m\] > \[\e[0m\]'
+    PS1+='\[\e[0;107m\]\[\e[1;30m\] $(shorten_path "\w" 50) \[\e[0m\]\[\e[1;37m\]\[\e[41m\] > \[\e[0m\]'
 else
-    PS1+='\[\e[47m\]\[\e[1;30m\] $(shorten_path "\w" 50) \[\e[0m\]\[\e[1;37m\]\[\e[42m\] > \[\e[0m\]'
+    PS1+='\[\e[0;107m\]\[\e[1;30m\] $(shorten_path "\w" 50) \[\e[0m\]\[\e[1;37m\]\[\e[42m\] > \[\e[0m\]'
 fi
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
