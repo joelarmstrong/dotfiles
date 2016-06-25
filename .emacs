@@ -19,7 +19,8 @@
                       markdown-mode
                       toc-org
                       js2-mode
-                      web-mode))
+                      web-mode
+                      scss-mode))
 (defun all-packages-installed (packages)
   (cond ((not packages) t)
         ((package-installed-p (car packages)) (all-packages-installed (cdr packages)))
@@ -37,6 +38,9 @@
 (require 'undo-tree)
 (require 'ess-site)
 
+(autoload 'scss-mode "scss-mode")
+(setq scss-compile-at-save nil)
+(add-to-list 'auto-mode-alist '("\\.scss\\'" . scss-mode))
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 
