@@ -20,7 +20,11 @@
                       toc-org
                       js2-mode
                       web-mode
-                      scss-mode))
+                      scss-mode
+                      yaml-mode
+                      racer
+                      flycheck
+                      flycheck-pyflakes))
 (defun all-packages-installed (packages)
   (cond ((not packages) t)
         ((package-installed-p (car packages)) (all-packages-installed (cdr packages)))
@@ -37,6 +41,10 @@
 (require 'smex)
 (require 'undo-tree)
 (require 'ess-site)
+(global-flycheck-mode)
+(require 'flycheck-pyflakes)
+(add-hook 'python-mode-hook 'flycheck-mode)
+(add-to-list 'flycheck-disabled-checkers 'python-pylint)
 
 (autoload 'scss-mode "scss-mode")
 (setq scss-compile-at-save nil)
@@ -149,6 +157,11 @@
 (setq company-idle-delay nil)
 (add-to-list 'company-backends 'company-anaconda)
 (add-hook 'python-mode-hook 'anaconda-mode)
+(add-hook 'rust-mode-hook #'racer-mode)
+(add-hook 'racer-mode-hook #'eldoc-mode)
+(add-hook 'racer-mode-hook #'company-mode)
+
+(require 'rust-mode)
 
 (smex-initialize)
 (global-set-key "\M-x" 'smex)
